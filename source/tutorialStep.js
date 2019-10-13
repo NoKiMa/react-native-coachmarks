@@ -52,7 +52,7 @@ export default class TurtorialStep extends Component {
     const lineLogoImg = require('../mask.png');
 
     return (
-      visible &&
+        visible &&
         <View style={styles.backArea}>
           <View style={[styles.overlay,
             {
@@ -87,51 +87,51 @@ export default class TurtorialStep extends Component {
             }]}
           />
           {!endModal &&
-            <View style={[styles.tooltip, tooltipPosition]}>
-              <Text style={styles.tooltipText}>{tooltip}</Text>
-              {okEnable && <Button title="OK" onPress={() => this.OKButton()} />}
-            </View>
+          <View style={[styles.tooltip, tooltipPosition]}>
+            <Text style={styles.tooltipText}>{tooltip}</Text>
+            {okEnable && <Button color={'#f45302'} title="OK" onPress={() => this.OKButton()} />}
+          </View>
           }
           {okEnable &&
-            <View style={[{ width: this.props.style.width, height: this.props.style.height }, this.props.position]}>
-              <View style={[this.props.style, styles.coachMarks]} />
-              {isCircleMask &&
-                <Image
-                  source={lineLogoImg}
-                  resizeMode="stretch"
-                  style={{
-                  flex: 1,
-                  width: null,
-                  height: null,
-                  }}
-                />
-              }
-            </View>
-          }
-          {!okEnable &&
-            <View style={[{ width: this.props.style.width, height: this.props.style.height }, this.props.position]}>
-              {isCircleMask &&
-              <Image
+          <View style={[{ width: this.props.style.width, height: this.props.style.height }, this.props.position]}>
+            <View style={[this.props.style, styles.coachMarks]} />
+            {isCircleMask &&
+            <Image
                 source={lineLogoImg}
                 resizeMode="stretch"
                 style={{
-                flex: 1,
-                width: null,
-                height: null,
-            }}
-              />
-            }
-              <View style={[this.props.style, styles.coachMarks]}>
-                <TouchableOpacity
-                  onPress={() => {
-                  this.OKButton();
-                  onPressMark();
+                  flex: 1,
+                  width: null,
+                  height: null,
                 }}
+            />
+            }
+          </View>
+          }
+          {!okEnable &&
+          <View style={[{ width: this.props.style.width, height: this.props.style.height }, this.props.position]}>
+            {isCircleMask &&
+            <Image
+                source={lineLogoImg}
+                resizeMode="stretch"
+                style={{
+                  flex: 1,
+                  width: null,
+                  height: null,
+                }}
+            />
+            }
+            <View style={[this.props.style, styles.coachMarks]}>
+              <TouchableOpacity
+                  onPress={() => {
+                    this.OKButton();
+                    onPressMark();
+                  }}
                   style={{ width: this.props.style.width, height: this.props.style.height }}
                   activeOpacity={1.0}
-                />
-              </View>
+              />
             </View>
+          </View>
           }
         </View>
     );
@@ -158,15 +158,16 @@ const styles =  StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
-    paddingTop: 16,
+    // paddingTop: 16,
   },
   tooltipText: {
     color: 'rgba(0, 0, 0, 0.87)',
     textAlign: 'center',
-    paddingTop: 5,
+    // paddingTop: 5,
     paddingLeft: 5,
     paddingRight: 5,
     paddingBottom: 15,
+    flex: 0.6
   },
   backArea: {
     width,
@@ -220,3 +221,4 @@ const styles =  StyleSheet.create({
     fontSize: 13,
   },
 });
+

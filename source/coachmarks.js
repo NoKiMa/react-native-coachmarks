@@ -16,6 +16,7 @@ import PropTypes from 'prop-types';
 
 
 import TurtorialStep from './tutorialStep';
+import isString from "subscriptions-transport-ws/dist/utils/is-string";
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,7 +28,7 @@ export default class CoachMarks extends Component {
     congratsText: PropTypes.string,
     congratsImage: PropTypes.number,
     onClose: PropTypes.func,
-    skipCongrats: PropTypes.bool,
+    skip:PropTypes.bool,
   }
 
   state = {
@@ -38,44 +39,61 @@ export default class CoachMarks extends Component {
 
   componentDidMount() {
     this.setDefaultStepStates();
+    // if(this.props.skip){
+    //   this.startTutorial()
+    // }
   }
 
   render() {
-    return (
-      <Modal
-        animationType="fade"
-        transparent
-        visible={this.props.visible && !this.state.isEnding}
-        onRequestClose={() => {
-          this.dismiss();
-        }}
+    console.log(this.props.congratsImageUri);
+    if (this.props.skip){
+      return ( <Modal
+          transparent
+          visible={this.props.visible && !this.state.isEnding}
+          onShow={() => {
+            console.log("WWWWW")
+            this.startTutorial()
+          }}
       >
-        {!this.state.isStarting &&
-          <View style={styles.visibleContainer}>
-            <TouchableOpacity style={styles.backArea} activeOpacity={1} />
-            <View style={styles.scene}>
-              <View style={styles.container}>
-               {this.props.congratsImage &&
-                 <Image
-                   style={{ width: 150, height: 150 }}
-                   source={this.props.congratsImage}
-                 />
-               }
-                <Text style={styles.centeringTxt}>{this.props.congratsText}</Text>
-                <View style={styles.divider}/>
-                <View style = {styles.button}>
-                  <Button title="startTutorial" onPress={() => this.startTutorial()} />
+        {this.renderCM()}
+      </Modal>)
+    } else {
+      return (
+          <Modal
+              animationType="fade"
+              transparent
+              visible={this.props.visible && !this.state.isEnding}
+              onRequestClose={() => {
+                this.dismiss();
+              }}
+          >
+            {!this.state.isStarting &&
+            <View style={styles.visibleContainer}>
+              <TouchableOpacity style={styles.backArea} activeOpacity={1}/>
+              <View style={styles.scene}>
+                <View style={styles.container}>
+                  {this.props.congratsImage &&
+                  <Image
+                      style={{width: 200, height: 150}}
+                      source={this.props.congratsImage}
+                  />
+                  }
+                  <Text style={styles.centeringTxt}>{this.props.congratsText}</Text>
+                  <View style={styles.divider}/>
+                  <View style={styles.button}>
+                    <Button title="start Tutorial" color={'#f45302'} onPress={() => this.startTutorial()}/>
+                  </View>
+                </View>
+                <View style={styles.skipScene}>
+                  <Button title="skip Tutorial" color={'#f45302'} onPress={() => this.dismiss()}/>
                 </View>
               </View>
-              <View style={styles.skipScene}>
-                <Button title="skipTutorial" onPress={() => this.dismiss()} />
-              </View>
             </View>
-          </View>
-        }
-        {this.renderCM()}
-      </Modal>
-    );
+            }
+            {this.renderCM()}
+          </Modal>
+      );
+    }
   }
 
   dismiss() {
@@ -95,11 +113,7 @@ export default class CoachMarks extends Component {
     for (let i = 0; i < this.props.numberOfSteps; i++) {
       states.push(0);
     }
-    this.setState({ stepStates: states, isStarting: Boolean(this.props.skipCongrats) }, () => {
-      if (this.props.skipCongrats) {
-        this.startTutorial()
-      }
-    });
+    this.setState({ stepStates: states });
   }
 
   startCoachMarks() {
@@ -118,7 +132,9 @@ export default class CoachMarks extends Component {
   OKBtn(step, onPressOK) {
     const states = this.state.stepStates;
     if (step === this.props.numberOfSteps - 1) {
-      this.dismiss();
+      // this.dismiss();
+      LayoutAnimation.easeInEaseOut();
+      this.setState({ isEnding: true });
     }
     for (let i = 0; i < this.props.numberOfSteps; i++) {
       if (i === step + 1) {
@@ -142,25 +158,25 @@ export default class CoachMarks extends Component {
     for (let i = 0; i < numberOfSteps; i++) {
       const state = this.state.stepStates[i];
       CM.push(<TurtorialStep
-        key={i}
-        step={i}
-        tooltip={coachMarks[i].tooltip}
-        style={coachMarks[i].style}
-        position={coachMarks[i].position}
-        tooltipPosition={coachMarks[i].tooltipPosition}
-        visible={state !== 0}
-        onPress={step => this.OKBtn(step, coachMarks[i].onPressOK)}
-        styles={this.props.styles}
-        okEnable={coachMarks[i].okEnable}
-        onPressMark={coachMarks[i].onPressMark}
-        endModal={coachMarks[i].endModal}
-        isCircleMask={coachMarks[i].isCircleMask}
+          key={i}
+          step={i}
+          tooltip={coachMarks[i].tooltip}
+          style={coachMarks[i].style}
+          position={coachMarks[i].position}
+          tooltipPosition={coachMarks[i].tooltipPosition}
+          visible={state !== 0}
+          onPress={step => this.OKBtn(step, coachMarks[i].onPressOK)}
+          styles={this.props.styles}
+          okEnable={coachMarks[i].okEnable}
+          onPressMark={coachMarks[i].onPressMark}
+          endModal={coachMarks[i].endModal}
+          isCircleMask={coachMarks[i].isCircleMask}
       />);
     }
     return (
-      <View>
-        {CM}
-      </View>
+        <View>
+          {CM}
+        </View>
     );
   }
 }
@@ -225,3 +241,4 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
+
